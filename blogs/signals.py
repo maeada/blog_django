@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 
 #https://docs.djangoproject.com/en/5.2/search/?q=django.db.models.signals+
 #https://docs.djangoproject.com/en/5.2/search/?q=django.dispatch+receiver
-from django.db.models.signals import post_save # 
+#https://docs.djangoproject.com/en/5.2/topics/signals/#django.dispatch.receiver
+from django.db.models.signals import post_save , m2m_changed
 from django.dispatch import receiver
 
 @receiver(post_save, sender=User)
@@ -16,7 +17,7 @@ def post_save_create_profile(sender, instance, created, **kwargs):
     """
 
     print(f"sender: {sender}")
-    print(f"instance: {instance}")  #The actual instance being saved.
+    print(f"instance: {instance}")  #The actual instance being saved.    
     print(f"created: {created}")
     if created:
         Profile.objects.create(user=instance)

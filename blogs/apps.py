@@ -1,5 +1,6 @@
 ##  ทุกครั้งที่เรา   run command 'manage.py runserver' ไฟล์นี้(apps.py) จะถูกexcuteทุกครั้ง
-from django.apps import AppConfig
+# https://docs.djangoproject.com/en/5.2/ref/applications/
+from django.apps import AppConfig   #  it uses that configuration for the application
 
 
 class BlogsConfig(AppConfig):
