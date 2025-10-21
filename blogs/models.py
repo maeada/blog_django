@@ -1,6 +1,7 @@
 # https://docs.djangoproject.com/en/5.2/topics/db/models/#overriding-model-methods
 from django.db import models
 import datetime as dt
+from django.utils import timezone
 
 #https://docs.djangoproject.com/en/5.2/ref/contrib/auth/
 from django.contrib.auth.models import User
@@ -54,7 +55,23 @@ class Content(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Subject: {self.subject} (date: {self.created.strftime('%d/%m/%Y')})"
+        return f"{self.subject} (by: {self.profile.user.username}) (date: {self.created.strftime('%d/%m/%Y')})"
 
-# class Comment(models.Model):
-#     content = models.ForeignKey(Content, on_delete=models.CASCADE)
+class Comment(models.Model):
+    content = models.ForeignKey(Content, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created = models.DateTimeField(blank=True)  
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"User {self.profile.user.username} comment to {self.content.subject} on date {self.created.date()}"
+    
+    def save(self, *args, **kwargs):
+        """"Overriding predefined model methods.
+        This function is advantage when you want to save 'field' to database'
+        """
+        if self.created is None:
+            self.created = timezone.now()
+        return super().save(*args, **kwargs)
+    
