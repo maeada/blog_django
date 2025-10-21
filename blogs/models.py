@@ -1,3 +1,4 @@
+# https://docs.djangoproject.com/en/5.2/topics/db/models/#overriding-model-methods
 from django.db import models
 import datetime as dt
 
@@ -16,10 +17,14 @@ class Profile(models.Model):
     updated = models.DateTimeField(auto_now=True) # every time the object is saved. “last-modified”
 
     def __str__(self):
-        return f"Profile of {self.user.username}" #, age: {self.calculate_age}"
-    
+        return f"Profile of {self.user.username}, age: {self.calculate_age()}"
+        # return f"Profile of {self.user.username}" 
+
     def calculate_age(self):
         """Calculates the age in years based on a given birthdate."""
+        if not self.birthdate:
+            return None     
+        
         today = dt.date.today()
         age = today.year - self.birthdate.year
 
@@ -28,7 +33,13 @@ class Profile(models.Model):
             age -= 1
         return age
     
-
+    # def save(self, *args, **kwargs):
+    #     """Overriding predefined model methods.
+    #     This function is advantage when you want to save 'field' to database'
+    #     """
+    #     self.calculate_age()    #  This line not need because 'age' is not 'field'
+    #     return super().save()
+    
     
 # u = User.objects.get(username="bulakorn")
 # print(u)
